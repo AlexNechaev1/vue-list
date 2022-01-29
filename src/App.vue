@@ -1,19 +1,40 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <ItemForm  v-on:onSubmit='submitItem'/>
+    <ListItem v-bind:list="items" v-on:onDelete="deleteItem" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ItemForm from "./components/ItemForm/ItemForm.vue";
+import ListItem from "./components/listItem/ListItem.vue";
+import { loadData, saveData} from "./localData";
+
+const listItem = loadData("items");
 
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      items: listItem,
+    };
+  },
+  methods: {
+    submitItem(item){
+      this.items.push(item);
+      saveData('items',this.items);
+    },
+    deleteItem(index) {
+      this.items.splice(index, 1);
+      saveData('items',this.items);
+    },
+  },
   components: {
-    HelloWorld
-  }
-}
+    ItemForm,
+    ListItem,
+  },
+};
 </script>
 
 <style>
@@ -23,6 +44,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
